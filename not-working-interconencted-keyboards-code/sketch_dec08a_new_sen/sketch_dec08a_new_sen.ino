@@ -82,6 +82,8 @@ void switchLayoutNumber () {
   }
 //  buf[7] = pageSetup;
 //  Serial1.write(buf, 8);
+//  releaseKey();
+
   
 }
 
