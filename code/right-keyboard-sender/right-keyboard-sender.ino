@@ -1,6 +1,5 @@
 uint8_t buf[8] = { 0 }; //Keyboard report buffer
 
-
 // default layout number [starts from 0]
 int pageSetup = 0;
 
@@ -14,43 +13,27 @@ bool shiftOn = false;
 
 
 
-//IMPORTANT KEYS TO USE:
-//0x4f - right arrow
-//0x50 - left arrow
-//0xe0 - left control (for buf[0])
-
-// special character example
-//     buf[0] = 0x02;  (shift - uppercase: 0x02)
-//     buf[2] = 0x1e;
-
-
-
 // array stores all possible codes for characters and key-combinations
-// {
-//  [s , 1 , !]
-//  [h , 2 , @ ]
-//  [a , 3 , # ]
-//  etc.  
-// }
-// s h a r k o w l i n g t e p c
-//
 // IMPORTANT: for this particular case: if you choose layout #3, then it is the same as layout 2, butshould add buf[0] = 0x02
+
 char keyChars[maxButtons][maxLayouts] = 
         { 
-          {0x16  , 0x1e , 0x1e}, 
-          {0x0b  , 0x1f , 0x1f}, 
-          {0x04  , 0x20 , 0x20}, 
-          {0x15  , 0x21 , 0x21}, 
-          {0x0e  , 0x22 , 0x22}, 
-          {0x12  , 0x23 , 0x23}, 
-          {0x1a  , 0x24 , 0x24},
+          {0x15  , 0x1e , 0x1e}, 
+          {0x0c  , 0x1f , 0x1f}, 
+          {0x12  , 0x20 , 0x20}, 
+          {0x17  , 0x21 , 0x21}, 
+          {0x11  , 0x22 , 0x22}, 
+          {0x0b  , 0x23 , 0x23}, 
+          {0x07  , 0x24 , 0x24},
           {0x50  , 0x50 , 0x50},     
           {0x4f  , 0x4f , 0x4f}, 
           {0x0f  , 0x27 , 0x27},       
+          {0x18  , 0x28 , 0x29}, 
+          {0x05  , 0x29 , 0x29},
         };
 
 void setup() {
-  // put your setup code here, to run once:
+  
  Serial1.begin(9600); // Default communication rate of the Bluetooth module  
 
   pinMode(2, INPUT);
@@ -80,7 +63,6 @@ void switchLayoutNumber () {
   if (pageSetup == maxLayouts) {
     pageSetup = 0;
   }
-  
 }
 
 
@@ -107,7 +89,6 @@ void controlAction(int num) {
   //1 - paste
 
   //assign controll
-//  buf[0] = 0xe0 ;
    buf[0] = 0x01;
 
   if (num == 0 ) {
@@ -126,9 +107,8 @@ void pressShift() {
 }
 
 
+
 void loop() {
-
-
 //switch the layout 
 
 if (digitalRead(4) == HIGH) {
@@ -232,6 +212,7 @@ void releaseKey() {
      buf[0] = 0;
   }
   buf[2] = 0;
+  buf[7] = 0;
   Serial1.write(buf, 8); // Send Release key
   delay(250);
 }
